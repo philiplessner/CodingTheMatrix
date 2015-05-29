@@ -18,3 +18,19 @@ def segment(pt1, pt2):
 
 def zero_vec(D):
     return Vec(D, {d: 0 for d in D})
+
+
+def setitem(v, d, val):
+    v.f[d] = val
+
+
+def getitem(v, d):
+    return v.f[d] if d in v.f.keys() else 0
+
+
+def scalar_mul(v, alpha):
+    return Vec(v.D, {d: alpha * value for d, value in v.f.items()})
+
+
+def add(u, v):
+    return Vec(u.D, {d: getitem(u, d) + getitem(v, d) for d in u.D})
