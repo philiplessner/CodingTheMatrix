@@ -34,3 +34,16 @@ def scalar_mul(v, alpha):
 
 def add(u, v):
     return Vec(u.D, {d: getitem(u, d) + getitem(v, d) for d in u.D})
+
+
+def neg(v):
+    return scalar_mul(v, -1)
+
+
+def list_dot(u, v):
+    return sum(ui * vi for ui, vi in zip(u, v))
+
+
+def dot_product_list(needle, haystack):
+    return [list_dot(needle, haystack[i:i+len(needle)])
+            for i in range(0, len(haystack) - len(needle))]
