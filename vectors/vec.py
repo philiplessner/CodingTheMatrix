@@ -1,7 +1,8 @@
 # Copyright 2013 Philip N. Klein
 
-def getitem(v,k):
-    """
+
+def getitem(v, k):
+    '''
     Return the value of entry k in v.
     Be sure getitem(v,k) returns 0 if k is not represented in v.f.
 
@@ -10,12 +11,13 @@ def getitem(v,k):
     3
     >>> v['b']
     0
-    """
+    '''
     assert k in v.D
     pass
 
-def setitem(v,k,val):
-    """
+
+def setitem(v, k, val):
+    '''
     Set the element of v with label d to be val.
     setitem(v,d,val) should set the value for key d even if d
     is not previously represented in v.f, and even if val is 0.
@@ -30,12 +32,13 @@ def setitem(v,k,val):
     >>> v['a'] = 0
     >>> v['a']
     0
-    """
+    '''
     assert k in v.D
     pass
 
-def equal(u,v):
-    """
+
+def equal(u, v):
+    '''
     Return true iff u is equal to v.
     Because of sparse representation, it is not enough to compare dictionaries
 
@@ -66,14 +69,15 @@ def equal(u,v):
     The values matter:
     >>> Vec({'a','b'},{'a':1}) == Vec({'a','b'},{'a':2})
     False
-    """
+    '''
     assert u.D == v.D
     pass
 
-def add(u,v):
-    """
+
+def add(u, v):
+    '''
     Returns the sum of the two vectors.
-    
+
     Consider using brackets notation u[...] and v[...] in your procedure
     to access entries of the input vectors.  This avoids some sparsity bugs.
 
@@ -103,12 +107,13 @@ def add(u,v):
     True
     >>> b + Vec({'a','e','i','o','u'}, {}) == b
     True
-    """
+    '''
     assert u.D == v.D
     pass
 
-def dot(u,v):
-    """
+
+def dot(u, v):
+    '''
     Returns the dot product of the two vectors.
 
     Consider using brackets notation u[...] and v[...] in your procedure
@@ -137,12 +142,13 @@ def dot(u,v):
     >>> v2 = Vec({1, 2}, {1 : 2, 2 : 1})
     >>> v1 * v2
     12
-    """
+    '''
     assert u.D == v.D
-    pass
+    return sum(u.f[d] * v.f[d] for d in (set(u.f.keys()) & set(v.f.keys())))
+
 
 def scalar_mul(v, alpha):
-    """
+    '''
     Returns the scalar-vector product alpha times v.
 
     Consider using brackets notation v[...] in your procedure
@@ -158,11 +164,12 @@ def scalar_mul(v, alpha):
     True
     >>> u == Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4})
     True
-    """
+    '''
     pass
 
+
 def neg(v):
-    """
+    '''
     Returns the negation of a vector.
 
     Consider using brackets notation v[...] in your procedure
@@ -175,18 +182,18 @@ def neg(v):
     True
     >>> -Vec({'a','b','c'}, {'a':1}) == Vec({'a','b','c'}, {'a':-1})
     True
-    """
+    '''
     pass
 
-###############################################################################################################################
 
 class Vec:
-    """
+    '''
     A vector has two fields:
     D - the domain (a set)
     f - a dictionary mapping (some) domain elements to field elements
         elements of D not appearing in f are implicitly mapped to zero
-    """
+    '''
+
     def __init__(self, labels, function):
         assert isinstance(labels, set)
         assert isinstance(function, dict)
