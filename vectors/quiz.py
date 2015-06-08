@@ -45,5 +45,19 @@ def list_dot(u, v):
 
 
 def dot_product_list(needle, haystack):
-    return [list_dot(needle, haystack[i:i+len(needle)])
+    return [list_dot(needle, haystack[i:i + len(needle)])
             for i in range(0, len(haystack) - len(needle))]
+
+
+def list2vec(L):
+    return Vec(set(range(len(L))), {i: x for i, x in enumerate(L)})
+
+
+def triangular_solve_n(rowlist, b):
+    D = rowlist[0].D
+    n = len(D)
+    assert D == set(range(n))
+    x = zero_vec(D)
+    for i in reversed(range(n)):
+        x.f[i] = (b[i] - rowlist[i] * x) / rowlist[i].f[i]
+    return x
