@@ -13,7 +13,7 @@ def getitem(v, k):
     0
     '''
     assert k in v.D
-    pass
+    return v.f[k] if k in v.f.keys() else 0
 
 
 def setitem(v, k, val):
@@ -34,7 +34,7 @@ def setitem(v, k, val):
     0
     '''
     assert k in v.D
-    pass
+    v.f[k] = val
 
 
 def equal(u, v):
@@ -52,7 +52,8 @@ def equal(u, v):
     >>> Vec({'a', 'b', 'c'}, {}) == Vec({'a', 'b', 'c'}, {'a': 0})
     True
 
-    Be sure that equal(u, v) checks equalities for all keys from u.f and v.f even if
+    Be sure that equal(u, v) checks equalities
+    for all keys from u.f and v.f even if
     some keys in u.f do not exist in v.f (or vice versa)
 
     >>> Vec({'x','y','z'},{'y':1,'x':2}) == Vec({'x','y','z'},{'y':1,'z':0})
@@ -71,7 +72,12 @@ def equal(u, v):
     False
     '''
     assert u.D == v.D
-    pass
+    for k in u.D:
+        if getitem(u, k) == getitem(v, k):
+            continue
+        else:
+            return False
+    return True
 
 
 def add(u, v):
@@ -84,8 +90,8 @@ def add(u, v):
     Do not seek to create more sparsity than exists in the two input vectors.
     Doing so will unnecessarily complicate your code and will hurt performance.
 
-    Make sure to add together values for all keys from u.f and v.f even if some keys in u.f do not
-    exist in v.f (or vice versa)
+    Make sure to add together values for all keys from u.f and v.f
+    even if some keys in u.f do not exist in v.f (or vice versa)
 
     >>> a = Vec({'a','e','i','o','u'}, {'a':0,'e':1,'i':2})
     >>> b = Vec({'a','e','i','o','u'}, {'o':4,'u':7})
@@ -187,6 +193,7 @@ def neg(v):
 
 
 class Vec:
+
     '''
     A vector has two fields:
     D - the domain (a set)
@@ -203,16 +210,18 @@ class Vec:
     __getitem__ = getitem
     __setitem__ = setitem
     __neg__ = neg
-    __rmul__ = scalar_mul #if left arg of * is primitive, assume it's a scalar
+    # if left arg of * is primitive, assume it's a scalar
+    __rmul__ = scalar_mul
 
-    def __mul__(self,other):
-        #If other is a vector, returns the dot product of self and other
+    def __mul__(self, other):
+        # If other is a vector, returns the dot product of self and other
         if isinstance(other, Vec):
-            return dot(self,other)
+            return dot(self, other)
         else:
-            return NotImplemented  #  Will cause other.__rmul__(self) to be invoked
+            # Will cause other.__rmul__(self) to be invoked
+            return NotImplemented
 
-    def __truediv__(self,other):  # Scalar division
+    def __truediv__(self, other):  # Scalar division
         return (1/other)*self
 
     __add__ = add
@@ -222,7 +231,7 @@ class Vec:
         if other == 0:
             return self
 
-    def __sub__(a,b):
+    def __sub__(a, b):
         "Returns a vector which is the difference of a and b."
         return a+(-b)
 
@@ -235,7 +244,8 @@ class Vec:
                 s += x*x
             elif isinstance(x, complex):
                 s += x*x.conjugate()
-            else: return False
+            else:
+                return False
         return s < 1e-20
 
     def __str__(v):
@@ -243,14 +253,14 @@ class Vec:
         D_list = sorted(v.D, key=repr)
         numdec = 3
         wd = dict([(k,(1+max(len(str(k)), len('{0:.{1}G}'.format(v[k], numdec))))) if isinstance(v[k], int) or isinstance(v[k], float) else (k,(1+max(len(str(k)), len(str(v[k]))))) for k in D_list])
-        s1 = ''.join(['{0:>{1}}'.format(str(k),wd[k]) for k in D_list])
+        s1 = ''.join(['{0:>{1}}'.format(str(k), wd[k]) for k in D_list])
         s2 = ''.join(['{0:>{1}.{2}G}'.format(v[k],wd[k],numdec) if isinstance(v[k], int) or isinstance(v[k], float) else '{0:>{1}}'.format(v[k], wd[k]) for k in D_list])
-        return "\n" + s1 + "\n" + '-'*sum(wd.values()) +"\n" + s2
+        return "\n" + s1 + "\n" + '-'*sum(wd.values()) + "\n" + s2
 
     def __hash__(self):
         "Here we pretend Vecs are immutable so we can form sets of them"
         h = hash(frozenset(self.D))
-        for k,v in sorted(self.f.items(), key = lambda x:repr(x[0])):
+        for k, v in sorted(self.f.items(), key=lambda x: repr(x[0])):
             if v != 0:
                 h = hash((h, hash(v)))
         return h
