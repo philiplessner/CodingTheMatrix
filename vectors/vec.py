@@ -115,7 +115,8 @@ def add(u, v):
     True
     '''
     assert u.D == v.D
-    pass
+    return Vec(u.D, {k: getitem(u, k) + getitem(v, k)
+                     for k in (set(u.f.keys()) | v.f.keys())})
 
 
 def dot(u, v):
@@ -171,7 +172,7 @@ def scalar_mul(v, alpha):
     >>> u == Vec({'x','y','z','w'},{'x':1,'y':2,'z':3,'w':4})
     True
     '''
-    pass
+    return Vec(v.D, {k: alpha * v.f[k] for k in v.f.keys()})
 
 
 def neg(v):
@@ -189,7 +190,7 @@ def neg(v):
     >>> -Vec({'a','b','c'}, {'a':1}) == Vec({'a','b','c'}, {'a':-1})
     True
     '''
-    pass
+    return scalar_mul(v, -1)
 
 
 class Vec:
