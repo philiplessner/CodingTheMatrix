@@ -1,7 +1,8 @@
 # coding: utf-8
 
 
-from functools import partial
+import random
+from functools import partial, reduce
 from quiz import addn, list_dot, scalar_vect_mult
 
 
@@ -36,8 +37,7 @@ def find_average_similarity(sen, sen_set, voting_dict):
 
 
 def find_average_record(sen_set, voting_dict):
-    ac = [0] * len(voting_dict['Biden'])
-    for k, v in voting_dict.items():
-        if k in sen_set:
-            ac = addn(ac, v)
-    return scalar_vect_mult(1 / len(sen_set), ac)
+    ini = [0] * len(random.choice(list(voting_dict.values())))
+    return scalar_vect_mult(1 / len(sen_set),
+                            reduce(addn, [v for k, v in voting_dict.items()
+                                          if k in sen_set], ini))
