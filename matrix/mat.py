@@ -41,7 +41,11 @@ def equal(A, B):
     True
     """
     assert A.D == B.D
-    pass
+    cart_prod = ((i, j) for i in A.D[0] for j in A.D[1])
+    for (i, j) in cart_prod:
+        if A[i, j] != B[i, j]:
+            return False
+    return True
 
 
 def setitem(M, k, val):
