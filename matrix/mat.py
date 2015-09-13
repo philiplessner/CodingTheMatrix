@@ -66,7 +66,10 @@ def setitem(M, k, val):
     True
     """
     assert k[0] in M.D[0] and k[1] in M.D[1]
-    pass
+    if k in M.f.keys():
+        M.f[k] = val
+    else:
+        M.f.update({k: val})
 
 
 def add(A, B):
@@ -95,7 +98,8 @@ def add(A, B):
     True
     """
     assert A.D == B.D
-    pass
+    return Mat(A.D, {(i, j): A[i, j] + B[i, j] for i in A.D[0]
+                     for j in A.D[1]})
 
 
 def scalar_mul(M, x):
@@ -110,7 +114,7 @@ def scalar_mul(M, x):
     >>> 0.25*M == Mat(({1,3,5}, {2,4}), {(1,2):1.0, (5,4):0.5, (3,4):0.75})
     True
     """
-    pass
+    return Mat(M.D, {(i, j): x * M[i, j] for i in M.D[0] for j in M.D[1]})
 
 
 def transpose(M):
@@ -125,7 +129,8 @@ def transpose(M):
     >>> M.transpose() == Mt
     True
     """
-    pass
+    return Mat((M.D[1], M.D[0]), {(j, i): M[i, j] for i in M.D[0]
+                                  for j in M.D[1]})
 
 
 def vector_matrix_mul(v, M):
