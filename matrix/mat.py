@@ -41,9 +41,9 @@ def equal(A, B):
     True
     """
     assert A.D == B.D
-    cart_prod = ((i, j) for i in A.D[0] for j in A.D[1])
-    for (i, j) in cart_prod:
-        if A[i, j] != B[i, j]:
+    cart_prod = ((r, c) for r in A.D[0] for c in A.D[1])
+    for (r, c) in cart_prod:
+        if A[r, c] != B[r, c]:
             return False
     return True
 
@@ -98,8 +98,8 @@ def add(A, B):
     True
     """
     assert A.D == B.D
-    return Mat(A.D, {(i, j): A[i, j] + B[i, j] for i in A.D[0]
-                     for j in A.D[1]})
+    return Mat(A.D, {(r, c): A[r, c] + B[r, c] for r in A.D[0]
+                     for c in A.D[1]})
 
 
 def scalar_mul(M, x):
@@ -114,7 +114,7 @@ def scalar_mul(M, x):
     >>> 0.25*M == Mat(({1,3,5}, {2,4}), {(1,2):1.0, (5,4):0.5, (3,4):0.75})
     True
     """
-    return Mat(M.D, {(i, j): x * M[i, j] for i in M.D[0] for j in M.D[1]})
+    return Mat(M.D, {(r, c): x * M[r, c] for r in M.D[0] for c in M.D[1]})
 
 
 def transpose(M):
@@ -129,8 +129,8 @@ def transpose(M):
     >>> M.transpose() == Mt
     True
     """
-    return Mat((M.D[1], M.D[0]), {(j, i): M[i, j] for i in M.D[0]
-                                  for j in M.D[1]})
+    return Mat((M.D[1], M.D[0]), {(c, r): M[r, c] for r in M.D[0]
+                                  for c in M.D[1]})
 
 
 def vector_matrix_mul(v, M):
@@ -158,7 +158,8 @@ def vector_matrix_mul(v, M):
     True
     """
     assert M.D[0] == v.D
-    pass
+    return Vec(M.D[1], {c: sum(M[r, c] * v[r] for r in M.D[0])
+                        for c in M.D[1]})
 
 
 def matrix_vector_mul(M, v):
@@ -186,7 +187,8 @@ def matrix_vector_mul(M, v):
     True
     """
     assert M.D[1] == v.D
-    pass
+    return Vec(M.D[0], {r: sum(M[r, c] * v[c] for c in M.D[1])
+                        for r in M.D[0]})
 
 
 def matrix_matrix_mul(A, B):
