@@ -4,6 +4,16 @@ from matutil import mat2rowdict, mat2coldict, rowdict2mat, coldict2mat
 from matutil import listlist2mat
 
 
+def lin_comb_mat_vec_mult(M, v):
+    assert v.D == M.D[1]
+    pass
+
+
+def lin_comb_vec_mat_mult(v, M):
+    assert v.D == M.D[0]
+    pass
+
+
 def dot_product_mat_vec_mult(M, v):
     '''
     >>> M = listlist2mat([[-1, 1, 2], [1, 2, 3], [2, 2, 1]])
