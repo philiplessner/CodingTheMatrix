@@ -1,6 +1,6 @@
 from vec import Vec
 from mat import Mat
-from matutil import mat2rowdict, mat2coldict, rowdict2mat, coldict2mat
+from matutil import mat2rowdict, mat2coldict
 from matutil import listlist2mat
 
 
@@ -19,14 +19,20 @@ def lin_comb_mat_vec_mult(M, v):
     '''
     assert v.D == M.D[1]
     cd = mat2coldict(M)
-    return Vec(M.D[0], {r: sum(v[c] * cd[c][r] for c in M.D[1])
-                        for r in M.D[0]})
+    return sum(v[c] * cd[c] for c in M.D[1])
     pass
 
 
 def lin_comb_vec_mat_mult(v, M):
+    '''
+    >>> M2 = listlist2mat([[-5, 10], [-4, 8], [-3, 6], [-2, 4]])
+    >>> v3 = Vec({0, 1, 2, 3}, {0: 4, 1: 3, 2: 2, 3: 1})
+    >>> dot_product_vec_mat_mult(v3, M2) == Vec({0, 1},{0: -40, 1: 80})
+    True
+    '''
     assert v.D == M.D[0]
-    pass
+    rd = mat2rowdict(M)
+    return sum(v[r] * rd[r] for r in M.D[0])
 
 
 def dot_product_mat_vec_mult(M, v):
