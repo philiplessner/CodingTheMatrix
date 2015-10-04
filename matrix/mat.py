@@ -158,8 +158,10 @@ def vector_matrix_mul(v, M):
     True
     """
     assert M.D[0] == v.D
-    return Vec(M.D[1], {c: sum(M[r, c] * v[r] for r in M.D[0])
-                        for c in M.D[1]})
+    u = Vec(M.D[1], {k: 0 for k in M.D[1]})
+    for (r, c) in M.f.keys():
+        u[c] = u[c] + v[r] * M[r, c]
+    return u
 
 
 def matrix_vector_mul(M, v):
@@ -187,8 +189,10 @@ def matrix_vector_mul(M, v):
     True
     """
     assert M.D[1] == v.D
-    return Vec(M.D[0], {r: sum(M[r, c] * v[c] for c in M.D[1])
-                        for r in M.D[0]})
+    u = Vec(M.D[0], {k: 0 for k in M.D[0]})
+    for (r, c) in M.f.keys():
+        u[r] = u[r] + M[r, c] * v[c]
+    return u
 
 
 def matrix_matrix_mul(A, B):
@@ -220,7 +224,7 @@ def matrix_matrix_mul(A, B):
     assert A.D[1] == B.D[0]
     pass
 
-################################################################################
+##############################################################################
 
 
 class Mat:
