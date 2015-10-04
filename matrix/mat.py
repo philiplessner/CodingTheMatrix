@@ -222,7 +222,11 @@ def matrix_matrix_mul(A, B):
     True
     """
     assert A.D[1] == B.D[0]
-    pass
+    cart_prod = ((r, c) for (r, _) in A.f.keys() for (_, c) in B.f.keys())
+    return Mat((A.D[0], B.D[1]),
+               {(r, t): Vec(A.D[1], {s: A[r, s] for (_, s) in A.f.keys()}) *
+                   Vec(B.D[0], {s: B[s, t] for (s, _) in B.f.keys()})
+                for (r, t) in cart_prod})
 
 ##############################################################################
 
@@ -243,13 +247,13 @@ class Mat:
     def __neg__(self):
         return (-1)*self
 
-    def __mul__(self,other):
+    def __mul__(self, other):
         if Mat == type(other):
-            return matrix_matrix_mul(self,other)
+            return matrix_matrix_mul(self, other)
         elif Vec == type(other):
-            return matrix_vector_mul(self,other)
+            return matrix_vector_mul(self, other)
         else:
-            return scalar_mul(self,other)
+            return scalar_mul(self, other)
             #this will only be used if other is scalar (or not-supported). mat and vec both have __mul__ implemented
 
     def __rmul__(self, other):
@@ -265,7 +269,7 @@ class Mat:
         if other == 0:
             return self
 
-    def __sub__(a,b):
+    def __sub__(a, b):
         return a+(-b)
 
     __eq__ = equal
@@ -281,8 +285,8 @@ class Mat:
         numdec = 3
         pre = 1+max([len(str(r)) for r in rows])
         colw = {col:(1+max([len(str(col))] + [len('{0:.{1}G}'.format(M[row,col],numdec)) if isinstance(M[row,col], int) or isinstance(M[row,col], float) else len(str(M[row,col])) for row in rows])) for col in cols}
-        s1 = ' '*(1+ pre + len(separator))
-        s2 = ''.join(['{0:>{1}}'.format(str(c),colw[c]) for c in cols])
+        s1 = ' '*(1 + pre + len(separator))
+        s2 = ''.join(['{0:>{1}}'.format(str(c), colw[c]) for c in cols])
         s3 = ' '*(pre+len(separator)) + '-'*(sum(list(colw.values())) + 1)
         s4 = ''.join(['{0:>{1}} {2}'.format(str(r), pre,separator)+''.join(['{0:>{1}.{2}G}'.format(M[r,c],colw[c],numdec) if isinstance(M[r,c], int) or isinstance(M[r,c], float) else '{0:>{1}}'.format(M[r,c], colw[c]) for c in cols])+'\n' for r in rows])
         return '\n' + s1 + s2 + '\n' + s3 + '\n' + s4
@@ -296,3 +300,8 @@ class Mat:
 
     def __iter__(self):
         raise TypeError('%r object is not iterable' % self.__class__.__name__)
+
+if __name__ == '__main__':
+    A = Mat(({0,1,2}, {0,1,2}), {(1,1):4, (0,0):0, (1,2):1, (1,0):5, (0,1):3, (0,2):2})
+    B = Mat(({0,1,2}, {0,1,2}), {(1,0):5, (2,1):3, (1,1):2, (2,0):0, (0,0):1, (0,1):4})
+    C = A * B
